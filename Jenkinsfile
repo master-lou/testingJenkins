@@ -10,6 +10,15 @@ pipeline {
     }
     stage("test")
     {
+       when {
+
+        expression {
+
+          BRANCH_NAME == 'test1' || BRANCH_NAME =='test2'
+
+        }
+
+      }
       steps {
         echo 'Testing the application...'
       }
