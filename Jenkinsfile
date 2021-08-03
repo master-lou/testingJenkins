@@ -1,46 +1,32 @@
 pipeline {
-
   agent any
-
+  parameters {
+    choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
+    booleanParam(name: 'executeTests', defaultValue: true, description: '')
+  }
   stages {
     stage("build") {
       steps {
-        echo 'Building the application...'
+        echo "Building the application..."
       }
     }
     stage("test")
     {
-       when {
-
+      when {
         expression {
-
-          BRANCH_NAME == 'test1' || BRANCH_NAME =='test2'
-
+          params.executeTests
         }
-
       }
       steps {
-        echo 'Testing the application...'
+        echo 'Testing the application just because we are in test1 or test2'
       }
     }
     stage("deploy")
     {
       steps {
-        echo 'deploying the application..'
+        echo 'deploying the application...'  
+        echo "deploying version ${params.VERSION}"      
       }
     }
   }
-  post {
-    always {
-      echo 'always runs regardless of successful or failed build'
-    }
-    failure {
-      echo 'this only runs on failed'
-    }
-    success {
-      echo 'this runs on success'
-    }
-  }
-
-
 }
